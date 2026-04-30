@@ -21,6 +21,9 @@ return [
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],
+    'quote' => [
+        'source' => env('QUOTE_SOURCE', 'api'),
+    ],
 
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),

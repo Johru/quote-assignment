@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use App\Services\Quote\QuoteServiceInterface;
+use App\Services\Quote\MockQuoteService;
+use App\Services\Quote\DummyJsonQuoteService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +18,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+
+        $this->app->bind(QuoteServiceInterface::class, function ($app) {
+            return config('services.quote.source') === 'mock'
+                ? $app->make(MockQuoteService::class)
+                : $app->make(DummyJsonQuoteService::class);
+        });
     }
 
     /**
@@ -37,14 +45,15 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
-        Password::defaults(fn (): ?Password => app()->isProduction()
-            ? Password::min(12)
+        Password::defaults(
+            fn(): ?Password => app()->isProduction()
+                ? Password::min(12)
                 ->mixedCase()
                 ->letters()
                 ->numbers()
                 ->symbols()
                 ->uncompromised()
-            : null,
+                : null,
         );
     }
 }

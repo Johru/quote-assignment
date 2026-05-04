@@ -14,6 +14,7 @@ class DummyJsonQuoteService implements QuoteServiceInterface
     public function __construct(
         private DummyJsonConnector $connector,
         private MockQuoteService $mockQuoteService,
+        private FallbackQuoteService $fallback
     ) { //
     }
 
@@ -25,7 +26,9 @@ class DummyJsonQuoteService implements QuoteServiceInterface
             $response = $this->connector->send(new GetQuoteRequest($id));
 
             if ($response->failed()) {
-                return $this->mockQuoteService->getQuoteForUser($user);
+                if ($response->failed()) {
+                    return $this->fallback->getQuoteForUser($user);
+                }
             }
 
             return new QuoteData(
@@ -37,7 +40,7 @@ class DummyJsonQuoteService implements QuoteServiceInterface
                 'message' => $e->getMessage(),
             ]);
 
-            return $this->mockQuoteService->getQuoteForUser($user);
+            return $this->fallback->getQuoteForUser($user);
         }
     }
 }

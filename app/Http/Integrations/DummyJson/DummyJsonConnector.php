@@ -8,6 +8,6 @@ class DummyJsonConnector extends Connector
 {
     public function resolveBaseUrl(): string
     {
-        return 'https://dummyjson.com';
+        return 'https://dummyjson222.com';
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Validation\Rules\Password;
 use App\Services\Quote\QuoteServiceInterface;
 use App\Services\Quote\MockQuoteService;
 use App\Services\Quote\DummyJsonQuoteService;
+use App\Services\Quote\FallbackQuoteService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
                 ? $app->make(MockQuoteService::class)
                 : $app->make(DummyJsonQuoteService::class);
         });
+
+        $this->app->bind(FallbackQuoteService::class);
     }
 
     /**

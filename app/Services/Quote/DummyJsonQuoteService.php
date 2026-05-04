@@ -26,9 +26,7 @@ class DummyJsonQuoteService implements QuoteServiceInterface
             $response = $this->connector->send(new GetQuoteRequest($id));
 
             if ($response->failed()) {
-                if ($response->failed()) {
-                    return $this->fallback->getQuoteForUser($user);
-                }
+                return $this->fallback->getQuoteForUser($user);
             }
 
             return new QuoteData(
